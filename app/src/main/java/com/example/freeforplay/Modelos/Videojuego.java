@@ -1,6 +1,7 @@
 package com.example.freeforplay.Modelos;
 
 public class Videojuego {
+    //Atributos
     private String id;
     private String title;
     private String thumbnail;
@@ -11,6 +12,7 @@ public class Videojuego {
     private String desarrollador;
     private String fechaSalida;
 
+    //Constructor
     public Videojuego(String id, String title, String thumbnail, String descripcion, String genero, String plataforma, String publisher, String desarrollador, String fechaSalida) {
         this.id = id;
         this.title = title;
@@ -23,6 +25,7 @@ public class Videojuego {
         this.fechaSalida = fechaSalida;
     }
 
+    //Getter y setter
     public String getId() {
         return id;
     }

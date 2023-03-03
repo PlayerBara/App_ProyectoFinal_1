@@ -45,6 +45,9 @@
         <activity android:name=".Vistas.crearUsuario"
             android:configChanges="orientation"
             android:screenOrientation="portrait"></activity>
+        <activity android:name=".Controladores.SettingActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

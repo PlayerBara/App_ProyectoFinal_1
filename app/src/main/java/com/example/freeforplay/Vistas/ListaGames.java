@@ -22,11 +22,13 @@ import java.util.ArrayList;
 
 public class ListaGames extends AppCompatActivity {
 
+    //Se crean los recyclers
     RecyclerView recyclerView;
     RecAllGames recAdapter;
 
     String data = "";
 
+    //Se crea una lista de los juegos que se añadiran al recycler
     ArrayList<Videojuego> listGames = new ArrayList<>();
 
     @Override
@@ -34,13 +36,17 @@ public class ListaGames extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_games);
 
+        //Se obtiene de los intent los datos
         Bundle extras = getIntent().getExtras();
         data = extras.getString("data");
 
+        //Se inicializa el recyclerView
         recyclerView = (RecyclerView) findViewById(R.id.recyclerGames);
 
+        //Carga los datos
         cargarDatos();
 
+        //Muestra los datos
         mostrarDatos();
     }
 
@@ -54,6 +60,7 @@ public class ListaGames extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
     }
 
+    //Carga los datos de los intent mediante los JSONObject y JSONArray
     private void cargarDatos(){
         try {
             JSONObject jsonObject = new JSONObject(data);

@@ -1,8 +1,10 @@
 package com.example.freeforplay.Vistas;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -13,10 +15,12 @@ import android.widget.Toast;
 
 import com.example.freeforplay.Controladores.DBAccess;
 import com.example.freeforplay.Controladores.HttpConnectGames;
+import com.example.freeforplay.Controladores.SettingActivity;
 import com.example.freeforplay.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Se crean las propiedades necesarias
     Button bAcceder;
     Button bToCreateUser;
     Button bToOptions;
@@ -24,10 +28,12 @@ public class MainActivity extends AppCompatActivity {
     TextView txtUser;
     TextView txtPass;
 
+    //Se crea la base de datos
     DBAccess dba;
 
     ProgressBar visualCargando;
 
+    //Este String se utilizara para almacenar el JSON de la api
     String data = "";
 
     @Override
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Se enlaza los elementos de la pantalla con los creados en esta clase
         bAcceder = (Button) findViewById(R.id.bAcceder);
         bToCreateUser = (Button) findViewById(R.id.bToCreateNewUser);
         bToOptions = (Button) findViewById(R.id.bToOptions);
@@ -42,8 +49,13 @@ public class MainActivity extends AppCompatActivity {
         txtUser = (TextView) findViewById(R.id.txtUser);
         txtPass = (TextView) findViewById(R.id.txtPass);
 
+        //Se inicializa la base de datos
         dba = new DBAccess(this);
 
+        //Se cargan las preferencias que se habian guardado
+        loadPreferences();
+
+        //Se inicializa el simbolo de cargando
         visualCargando = (ProgressBar) findViewById(R.id.visualCargandoMain);
 
         //Pasa a la pantalla de menu
@@ -60,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
                         toastInfo("Campo de contraseña vacio");
                     }else{
                         if(dba.checkPassword(name, pass)){
+                            //Inhabilita el boton para que el usuario no pueda crear muchas pantallas antes de que carguen los datos
                             bAcceder.setClickable(false);
+                            //Hace visible el progressBar
                             visualCargando.setVisibility(View.VISIBLE);
                             new taskConnections().execute("GET", "/games");
                         }else{
@@ -84,12 +98,26 @@ public class MainActivity extends AppCompatActivity {
         bToOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toastInfo("En construccion");
+                Intent i = new Intent(MainActivity.this, SettingActivity.class);
+
+                startActivity(i);
 
             }
         });
     }
 
+    //Se cargan las preferencias
+    private void loadPreferences(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+
+        String userText = sharedPreferences.getString("emailPreference","");
+        String passText = sharedPreferences.getString("passwordPreference","");
+
+        txtUser.setText(userText);
+        txtPass.setText(passText);
+    }
+
+    //Se conecta con la api
     private class taskConnections extends AsyncTask<String,Void,String> {
 
         @Override
@@ -111,16 +139,20 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
 
             if(s != null){
+                //Se le añade el código necesario y se le adjunta el JSON
                 data = "{\"result\":" + s + "}";
 
                 Intent i = new Intent(MainActivity.this, Menu.class);
-                //Probar String builder
+                //Se pasa los datos del JSON para las siguientes pantallas, asi no hace falta obtenerlos de internet de nuevo
                 i.putExtra("data", data);
 
+                //Hace que el boton sea accesible otra vez
                 bAcceder.setClickable(true);
 
+                //Se guarda el simbolo de cargando
                 visualCargando.setVisibility(View.INVISIBLE);
 
+                //Se inicializa la pantalla una vez terminada la carga de datos
                 startActivity(i);
 
             }else{

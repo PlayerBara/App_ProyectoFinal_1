@@ -13,11 +13,13 @@ import com.example.freeforplay.R;
 
 public class Menu extends AppCompatActivity {
 
+    //Se crea los atributos
     Button bListGames;
     Button bRandomGame;
     Button bListFav;
     Button bExit;
 
+    //Se crea la base de datos
     DBAccess dba;
 
     String data = "";
@@ -33,10 +35,13 @@ public class Menu extends AppCompatActivity {
         bListFav = (Button) findViewById(R.id.bListFav);
         bExit = (Button) findViewById(R.id.bExit);
 
+        //Se inicializa la base de datos
         dba = new DBAccess(this);
 
+        //Carga los datos
         cargarDatos();
 
+        //accede a la lista de juegos
         bListGames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,6 +53,7 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        //Accede al juego random
         bRandomGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,6 +65,7 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        //Accede a la lista de favoritos
         bListFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,6 +79,7 @@ public class Menu extends AppCompatActivity {
             }
         });
 
+        //Sale del menu
         bExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +89,7 @@ public class Menu extends AppCompatActivity {
 
     }
 
+    //Carga los datos para enviarlos por un intent
     private void cargarDatos(){
         Bundle extras = getIntent().getExtras();
 
