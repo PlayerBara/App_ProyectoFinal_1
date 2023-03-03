@@ -18,11 +18,13 @@ public class crearUsuario extends AppCompatActivity {
     //Usado a partir de una biblioteca externa
     MorphingButton bCreateUser;
 
+    //crea los atributos de la pantalla
     Button bCancel;
 
     TextView txtNewUser;
     TextView txtNewPass;
 
+    //Crea la base de datos
     DBAccess dba;
 
     @Override
@@ -30,15 +32,17 @@ public class crearUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_user);
 
+        //Crea el boton de la libreria externa que elegi
         bCreateUser = (MorphingButton) findViewById(R.id.bCreateUser);
 
+        //Se crean los estados del boton
         MorphingButton.Params normal = MorphingButton.Params.create()
                 .duration(5)
                 .text("Crear usuario")
                 .width(500)
                 .height(150)
                 .cornerRadius(100)
-                .color(Color.BLUE)
+                .color(Color.rgb(255, 152, 0))
                 .colorPressed(Color.GRAY);
 
         MorphingButton.Params error = MorphingButton.Params.create()
@@ -50,14 +54,16 @@ public class crearUsuario extends AppCompatActivity {
                 .color(Color.RED)
                 .colorPressed(Color.GRAY);
 
+        //Se pone el boton del estado normal
         bCreateUser.morph(normal);
 
-
+        //Se enlaza los atributos de la pantalla con los del activity
         bCancel = (Button) findViewById(R.id.bCancelNewUser);
 
         txtNewUser = (TextView) findViewById(R.id.txtNewUser);
         txtNewPass = (TextView) findViewById(R.id.txtNewPass);
 
+        //Se inicializa la base de datos
         dba = new DBAccess(this);
 
         bCreateUser.setOnClickListener(new View.OnClickListener() {

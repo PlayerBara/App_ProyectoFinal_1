@@ -13,6 +13,7 @@ import com.example.freeforplay.R;
 
 public class MoreInfo extends AppCompatActivity {
 
+    //Crea los atributos
     ImageView imgGame;
     TextView titulo;
     TextView descripcion;
@@ -29,6 +30,7 @@ public class MoreInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.info_extra);
 
+        //Enlaza los atributos con los elementos del activity
         imgGame = (ImageView) findViewById(R.id.imgGameInfo);
         titulo = (TextView) findViewById(R.id.txtTituloInfo);
         descripcion = (TextView) findViewById(R.id.txtDescInfo);
@@ -38,6 +40,7 @@ public class MoreInfo extends AppCompatActivity {
         desarrolladora = (TextView) findViewById(R.id.txtDesarrolladorInfo);
         fechaSalida = (TextView) findViewById(R.id.txtFechaSalidaInfo);
 
+        //Se obtienen datos de un intent
         Intent i = getIntent();
         titulo.setText(i.getExtras().getString("titulo"));
         descripcion.setText(i.getExtras().getString("descripcion"));

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 public class RandomGame extends AppCompatActivity {
 
+    //Se cargan los atributos del activity
     ImageView imagen;
     TextView titulo;
     TextView descripcion;
@@ -35,12 +36,16 @@ public class RandomGame extends AppCompatActivity {
     Button bNewRandomGame;
     Button bAddFav;
 
+    //Se crea la base de datos
     DBAccess dba;
 
+    //Se crea un string que se utilizara para cargar el JSON
     String data = "";
 
+    //Se crea un int para añadir un numero aleatorio
     int randomGame;
 
+    //Se crea un arrayList para añadir la lista de juegos
     ArrayList<Videojuego> listaGames= new ArrayList <Videojuego> ();
 
     @Override
@@ -48,6 +53,7 @@ public class RandomGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.random_game);
 
+        //Se enlazan los elementos del activity con los atributos antes creados
         imagen = (ImageView) findViewById(R.id.imgRandom);
         titulo = (TextView) findViewById(R.id.txtTituloRandom);
         descripcion = (TextView) findViewById(R.id.txtDescRandom);
@@ -60,12 +66,16 @@ public class RandomGame extends AppCompatActivity {
         bNewRandomGame = (Button) findViewById(R.id.bNewRandom);
         bAddFav = (Button) findViewById(R.id.bAddFavRandom);
 
+        //Se inicializa la base de datos
         dba = new DBAccess(this);
 
+        //Se cargan los datos
         cargarDatos();
 
+        //Se crea un numero aleatorio
         newRandomGame();
 
+        //Boton para mostrar un nuevo juego aleatorio
         bNewRandomGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +83,7 @@ public class RandomGame extends AppCompatActivity {
             }
         });
 
+        //Boton para añadirlo a favoritos
         bAddFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,10 +118,12 @@ public class RandomGame extends AppCompatActivity {
 
     }
 
+    //Carga los datos de la aplicaión
     private void cargarDatos(){
         Bundle extras = getIntent().getExtras();
         data = extras.getString("data");
 
+        //Se obtienen los juegos del Json gracias al JSONObject y JSONArray
         try {
             JSONObject jsonObject = new JSONObject(data);
             JSONArray jsonArray = jsonObject.getJSONArray("result");
@@ -144,6 +157,7 @@ public class RandomGame extends AppCompatActivity {
         }
     }
 
+    //Se crea un nuevo numero aleatorio y muestra la posición
     private void newRandomGame(){
         int max = listaGames.size() - 1;
 
@@ -154,6 +168,7 @@ public class RandomGame extends AppCompatActivity {
         mostrarDatos(game);
     }
 
+    //Muestra los datos por pantalla
     private void mostrarDatos(Videojuego game){
         titulo.setText(game.getTitle());
         descripcion.setText(game.getDescripcion());
@@ -171,6 +186,7 @@ public class RandomGame extends AppCompatActivity {
                 .into(imagen);
     }
 
+    //Checkea si existe el juego en favoritos para cambiar el texto del boton
     private void checkearJuegoFav (String id){
         if (dba.checkGame(id)){
             bAddFav.setText("Borrar de favoritos");

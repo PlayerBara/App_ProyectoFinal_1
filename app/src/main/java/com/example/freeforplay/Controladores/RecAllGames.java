@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,18 +21,17 @@ import com.bumptech.glide.Glide;
 import com.example.freeforplay.Modelos.Videojuego;
 import com.example.freeforplay.R;
 import com.example.freeforplay.Vistas.MoreInfo;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder>{
     //La lista se utilizara como auxiliar
-    List<Videojuego> listGames;
-    Context context;
+    private List<Videojuego> listGames;
+    private Context context;
     private CircularProgressDrawable progressDrawable;
-    DBAccess dba;
+    //Se crea la base de datos
+    private DBAccess dba;
+    private AdapterView.OnLongClickListener longClickListener;
 
     public RecAllGames(List<Videojuego> listGames) {
         this.listGames = listGames;
@@ -43,8 +43,13 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_game,parent, false);
         RecyclerHolder recyclerHolder = new RecyclerHolder(view);
         context = parent.getContext();
+        //Se inicializa la base de datos
         dba = new DBAccess(context);
+
+        view.setOnLongClickListener(longClickListener);
         return recyclerHolder;
+
+
     }
 
     @Override
@@ -74,6 +79,7 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
                 .error(R.mipmap.ic_launcher)
                 .into(holder.imgGame);
 
+        //Añade a favoritos el jeugo
         holder.bAddFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +96,7 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
             }
         });
 
+        //Pasa a la pantalla de detalle con los datos necesarios
         holder.bMoreInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +122,7 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
     private boolean addFav(Videojuego game){
         boolean agregado = false;
 
+        //Atributos que obtiene los datos y los añade a strings
         String id = game.getId();
         String titulo = game.getTitle();
         String img = game.getThumbnail();
@@ -125,6 +133,7 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
         String desarrollador = game.getDesarrollador();
         String fecha = game.getFechaSalida();
 
+        //Mete los datos anteriores a la base de datos
         if(dba.insertOnGames(id, titulo, img, desc, genero, plataforma, publi, desarrollador, fecha) != -1){
             Toast.makeText(context, "Añadido a favoritos", Toast.LENGTH_SHORT).show();
             agregado = true;
@@ -135,6 +144,11 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
         return agregado;
     }
 
+    public void setOnLongClickListener(View.OnLongClickListener listener){
+        this.longClickListener = listener;
+    }
+
+    //Borra de favoritos
     private boolean delFav(Videojuego game){
         boolean eliminado = false;
 
@@ -149,6 +163,7 @@ public class RecAllGames extends RecyclerView.Adapter<RecAllGames.RecyclerHolder
 
         return eliminado;
     }
+
 
     public AlertDialog createAlertDialog(String titulo, String mensaje, Videojuego game){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
