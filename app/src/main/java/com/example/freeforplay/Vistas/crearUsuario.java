@@ -1,5 +1,6 @@
 package com.example.freeforplay.Vistas;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -8,12 +9,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dd.morphingbutton.MorphingButton;
 import com.example.freeforplay.Controladores.DBAccess;
 import com.example.freeforplay.R;
 
 public class crearUsuario extends AppCompatActivity {
 
-    Button bCreateUser;
+    //Usado a partir de una biblioteca externa
+    MorphingButton bCreateUser;
+
     Button bCancel;
 
     TextView txtNewUser;
@@ -26,7 +30,29 @@ public class crearUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_user);
 
-        bCreateUser = (Button) findViewById(R.id.bCreateUser);
+        bCreateUser = (MorphingButton) findViewById(R.id.bCreateUser);
+
+        MorphingButton.Params normal = MorphingButton.Params.create()
+                .duration(5)
+                .text("Crear usuario")
+                .width(500)
+                .height(150)
+                .cornerRadius(100)
+                .color(Color.BLUE)
+                .colorPressed(Color.GRAY);
+
+        MorphingButton.Params error = MorphingButton.Params.create()
+                .duration(500)
+                .text("Crear usuario")
+                .width(500)
+                .height(150)
+                .cornerRadius(100)
+                .color(Color.RED)
+                .colorPressed(Color.GRAY);
+
+        bCreateUser.morph(normal);
+
+
         bCancel = (Button) findViewById(R.id.bCancelNewUser);
 
         txtNewUser = (TextView) findViewById(R.id.txtNewUser);
@@ -52,13 +78,19 @@ public class crearUsuario extends AppCompatActivity {
                                 Toast.makeText(crearUsuario.this, "Se creo el usuario", Toast.LENGTH_SHORT).show();
                                 salir();
                             }else{
+                                bCreateUser.morph(error);
+
                                 Toast.makeText(crearUsuario.this, "No se pudo crear el usuario", Toast.LENGTH_SHORT).show();
                             }
                         }else{
+                            bCreateUser.morph(error);
+
                             Toast.makeText(crearUsuario.this, "El usuario ya existe", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }else{
+                    bCreateUser.morph(error);
+
                     Toast.makeText(crearUsuario.this, "El usuario debe tener más de 4 letras", Toast.LENGTH_SHORT).show();
                 }
             }
